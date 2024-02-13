@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	tb "gopkg.in/tucnak/telebot.v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"time"
@@ -15,15 +16,20 @@ type Event struct {
 	Date      time.Time `gorm:"not null"`
 	Text      string    `gorm:"not null"`
 	User_id   int64     `gorm:"not null"`
+	Event_id  int64     `gorm:"not null"`
 }
 
-func InitDB() error {
-	dsn := "host=localhost user=admin password=pass dbname=db_auth port=5432 sslmode=disable"
+const (
+	ModeHTML tb.ParseMode = "HTML"
+)
+
+func InitDB() (*gorm.DB, error) {
+	dsn := "host=localhost user=admin password=pass dbname=db_auth port=5432 sslmode=disable TimeZone=Europe/Kiev"
 	var err error
 	db, err = gorm.Open(postgres.Open(dsn))
 	if err != nil {
 		fmt.Println("error: ", err)
-		return err
+		return nil, err
 	}
 
 	fmt.Println("db connected", db)
@@ -31,17 +37,8 @@ func InitDB() error {
 	err = db.AutoMigrate(&Event{})
 	if err != nil {
 		fmt.Println("error: ", err)
-		return err
+		return nil, err
 	}
 
-	return nil
-}
-
-func CreateEvent(event *Event) error {
-	err := db.Create(event).Error
-	if err != nil {
-		fmt.Println("error: ", err)
-		return err
-	}
-	return nil
+	return db, nil
 }

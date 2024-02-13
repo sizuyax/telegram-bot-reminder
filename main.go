@@ -2,15 +2,21 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"psos/database"
 	"psos/telegram"
 )
 
 func main() {
-	err := database.InitDB()
+	log.Println("запуск базы данных")
+	_, err := database.InitDB()
 	if err != nil {
 		fmt.Println("ошибка в main")
 	}
-	telegram.NewBotTelegram()
 
+	log.Println("запуск бота")
+	_, err = telegram.NewBotTelegram()
+	if err != nil {
+		fmt.Println("ошибка в main")
+	}
 }
