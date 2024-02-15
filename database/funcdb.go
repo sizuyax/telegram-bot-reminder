@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+// funcs for working with database CRUD
+
 func CreateEvent(event *Event, m *tb.Message) error {
 	event.Event_id = m.Sender.ID
 

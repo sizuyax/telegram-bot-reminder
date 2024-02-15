@@ -8,15 +8,14 @@ import (
 )
 
 func main() {
-	log.Println("запуск базы данных")
 	_, err := database.InitDB()
 	if err != nil {
-		fmt.Println("ошибка в main")
+		fmt.Println("failed to start database")
 	}
 
-	log.Println("запуск бота")
-	_, err = telegram.NewBotTelegram()
-	if err != nil {
-		fmt.Println("ошибка в main")
+	log.Println("bot started...")
+	err2 := telegram.NewBotTelegram()
+	if err2 != nil {
+		fmt.Println("failed to start bot")
 	}
 }

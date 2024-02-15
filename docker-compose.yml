@@ -1,11 +1,17 @@
 version: '3.5'
 
 services:
-  db_auth:
-    container_name: db_auth
+  db:
+    container_name: db
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=pass
       - POSTGRES_USER=admin
+    env_file:
+      - .env
     image: postgres:15.5
+  bot:
+    build:
+        context: .
+        dockerfile: Dockerfile-bot
