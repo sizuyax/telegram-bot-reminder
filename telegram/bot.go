@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 	"psos/database"
-	"psos/src/utils"
+	"psos/utils"
 	"strconv"
 	"time"
 )
@@ -33,7 +33,8 @@ var (
 	firstname string
 )
 
-func NewBotTelegram() (*tb.Bot, error) {
+// start bot
+func NewBotTelegram() error {
 	fmt.Println("bot is running...")
 
 	utils.LoadEnv()
@@ -54,7 +55,7 @@ func NewBotTelegram() (*tb.Bot, error) {
 	go SendReminder(b)
 
 	b.Start()
-	return b, nil
+	return nil
 }
 
 func handlerMessage(b *tb.Bot) {

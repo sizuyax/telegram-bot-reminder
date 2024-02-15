@@ -1,22 +1,20 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"psos/database"
 	"psos/telegram"
 )
 
 func main() {
-	log.Println("запуск базы данных")
 	_, err := database.InitDB()
 	if err != nil {
-		fmt.Println("ошибка в main")
+		log.Fatalf("failed to connect to database, error: %v", err)
 	}
 
-	log.Println("запуск бота")
-	_, err = telegram.NewBotTelegram()
+	log.Println("bot started...")
+	err = telegram.NewBotTelegram()
 	if err != nil {
-		fmt.Println("ошибка в main")
+		log.Fatalf("failed to start bot, error: %v", err)
 	}
 }
