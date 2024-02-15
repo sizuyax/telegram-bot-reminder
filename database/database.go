@@ -26,7 +26,7 @@ const (
 
 // func for initializing db
 func InitDB() (*gorm.DB, error) {
-	dsn := "host=localhost user=admin password=pass dbname=db port=5432 sslmode=disable TimeZone=Europe/Kiev"
+	dsn := "host=db user=admin password=pass dbname=db port=5432 sslmode=disable TimeZone=Europe/Kiev"
 	var err error
 	db, err = gorm.Open(postgres.Open(dsn))
 	if err != nil {
