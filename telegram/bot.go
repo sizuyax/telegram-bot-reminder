@@ -42,7 +42,7 @@ func NewBotTelegram() error {
 	tokenBot := os.Getenv("TG_API_TOKEN")
 
 	b, err := tb.NewBot(tb.Settings{
-		URL:    "https://your-heroku-app.herokuapp.com",
+		URL:    "https://api.telegram.org",
 		Token:  tokenBot,
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
