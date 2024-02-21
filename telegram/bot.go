@@ -4,6 +4,7 @@ import (
 	"fmt"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"log"
+	"net/http"
 	"os"
 	"psos/database"
 	"psos/utils"
@@ -41,7 +42,7 @@ func NewBotTelegram() error {
 	tokenBot := os.Getenv("TG_API_TOKEN")
 
 	b, err := tb.NewBot(tb.Settings{
-		URL:    "https://api.telegram.org",
+		URL:    "https://your-heroku-app.herokuapp.com",
 		Token:  tokenBot,
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
@@ -53,6 +54,23 @@ func NewBotTelegram() error {
 	handlerMessage(b)
 
 	go SendReminder(b)
+
+	b.Handle("/"+b.Token, func(m *tb.Message) {
+		b.ProcessUpdate(tb.Update{Message: m})
+	})
+
+	// Запуск веб-сервера на указанном порту
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // По умолчанию используем порт 8080, если переменная окружения не задана
+	}
+
+	go func() {
+		log.Printf("Starting server on port %s...", port)
+		if err := http.ListenAndServe(":"+port, nil); err != nil {
+			log.Fatalf("Error starting server: %s", err)
+		}
+	}()
 
 	b.Start()
 	return nil
