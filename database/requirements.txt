@@ -1,0 +1,10 @@
+telebot
+postgres
+pgpassfile
+pgservicefile
+pgx
+inflection
+godotenv
+pq
+crypto
+gorm
