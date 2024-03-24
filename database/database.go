@@ -2,45 +2,37 @@ package database
 
 import (
 	"fmt"
-	tb "gopkg.in/tucnak/telebot.v2"
+	"github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"time"
+	"remider/config"
+	"remider/models"
 )
 
-var db *gorm.DB
+var DB *gorm.DB
 
-// Event struct
-type Event struct {
-	gorm.Model
-	Firstname string    `gorm:"not null"`
-	Date      time.Time `gorm:"not null"`
-	Text      string    `gorm:"not null"`
-	User_id   int64     `gorm:"not null"`
-	Event_id  int64     `gorm:"not null"`
-}
-
-const (
-	ModeHTML tb.ParseMode = "HTML"
-)
-
-// func for initializing db
-func InitDB() (*gorm.DB, error) {
-	dsn := "host=db user=admin password=pass dbname=db port=5432 sslmode=disable TimeZone=Europe/Kiev"
+func InitDB() error {
 	var err error
-	db, err = gorm.Open(postgres.Open(dsn))
+
+	dsn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=%s",
+		config.Cfg.PostgresUser,
+		config.Cfg.PostgresPassword,
+		config.Cfg.PostgresHost,
+		config.Cfg.PostgresDBName,
+		"disable",
+	)
+	DB, err = gorm.Open(postgres.Open(dsn))
 	if err != nil {
-		fmt.Println("error: ", err)
-		return nil, err
+		logrus.Error("error: ", err)
+		return err
 	}
 
-	fmt.Println("db connected", db)
+	fmt.Println("db connected")
 
-	err = db.AutoMigrate(&Event{})
-	if err != nil {
+	if err = DB.AutoMigrate(&models.Event{}); err != nil {
 		fmt.Println("error: ", err)
-		return nil, err
+		return err
 	}
 
-	return db, nil
+	return nil
 }

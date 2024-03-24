@@ -1,17 +1,13 @@
-version: '3.5'
-
+version: '3.8'
 services:
-  db:
-    container_name: db
-    ports:
-      - "5432:5432"
+  db_reminder:
+    container_name: db_reminder
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=pass
-      - POSTGRES_USER=admin
-      - POSTGRES_DB=db
     env_file:
       - .env
-    image: postgres:15.5
+    image: postgres:13.3
   bot:
     build:
         context: .
